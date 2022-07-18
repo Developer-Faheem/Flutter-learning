@@ -13,7 +13,7 @@ class Question extends StatelessWidget {
       margin: EdgeInsets.all(15), //multiple constructors
       child: Text(
         questionText,
-        style: TextStyle(fontSize: 28, color: Colors.red),
+        style: TextStyle(fontSize: 28, color: Colors.black),
         textAlign: TextAlign.center, //this is the enum
       ),
     );
