@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import './question.dart'; // use ./ for the internal files (custom widgets )
 import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() => runApp(_MyApp());
 
@@ -18,8 +20,18 @@ class _MyAppState extends State<_MyApp> {
 
   int _questionIndex =
       0; //underscore in  order to make the properties or the methods or classes private
+      int  _totalScore=0;
 
-  void _callthis() {
+void _reset(){
+  setState(() {
+    _totalScore=0;
+    _questionIndex=0;
+  });
+}
+  void _callthis(int score) {
+     
+     _totalScore+=score;
+
     setState(() {
       //when this methods is called it will  call the build method and the build will only render the changes
       _questionIndex = _questionIndex + 1; //enclosed by the annonymous class
@@ -29,19 +41,33 @@ class _MyAppState extends State<_MyApp> {
   }
 
   Widget build(BuildContext context) {
-    const question =const[//const to show it is both compile and run  time constant
+    const _question = const [
+      //const to show it is both compile and run  time constant
       //this is the list of maps
       {
         'questionText': 'What is your favourite Animal',
-        'answerText': ['rabbit', 'cat', 'dog']
+        'answerText': [
+          {'text': 'rabbit', 'score': 10},
+          {'text': 'cat', 'score': 5},
+          {'text': 'dog', 'score': 3}
+        ]
       },
       {
         'questionText': 'What is your favourite color',
-        'answerText': ['red', 'blue', 'green','yellow']
+        'answerText': [
+          {'text': 'red', 'score': 10},
+          {'text': 'blue', 'score': 7},
+          {'text': 'green', 'score': 10},
+          {'text': 'yellow', 'score': 5}
+        ]
       },
       {
         'questionText': 'What is your favourite Animal',
-        'answerText': ['rabbit', 'cat', 'dog']
+        'answerText': [
+          {'text': 'rabbit', 'score': 10},
+          {'text': 'cat', 'score': 5},
+          {'text': 'dog', 'score': 3}
+        ]
       },
     ];
 
@@ -50,23 +76,13 @@ class _MyAppState extends State<_MyApp> {
         appBar: AppBar(
           title: Text('My  App'),
         ),
-        body:
-          _questionIndex<question.length? Column(//ternary operator
-          children: [
-            //column widget in order to add multiple things in a column one after the other
-
-            Question((question[_questionIndex]['questionText'])
-                .toString()), //the custom widget will be called with the data passed throught the constructor
-
-            ...(question[_questionIndex]['answerText'] as List<String>)
-                .map((answers) {
-              //...operator to add this answer list  into the widgets in column
-              return Answer(
-                  _callthis, answers); //mapping the list into the widget
-            }).toList() //here the answers refer to the answers one by one
-          ],
-        ): Center(child: Text('you did it!'),),
+        body: _questionIndex < _question.length
+            ? Quiz(
+                callme: _callthis,
+                question: _question,
+                questionIndex: _questionIndex)
+            : Result(_totalScore,_reset),
       ),
     );
   }
-} 
+}
